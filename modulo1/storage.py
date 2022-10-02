@@ -1,4 +1,3 @@
-import pprint
 
 class Storage:
     def __init__(self):
@@ -32,13 +31,27 @@ class Storage:
         self.db.ordinary_payment(name=name)
 
     def extraordinary_amortization(self) -> None:
-        pass
+        name = input('Enter name: ')
+
+        a_type = input('Enter 1 to term reduction or 2 to installment value: ')
+        while True:
+            if a_type == '1':
+                a_type == 'term reduction'
+                break
+            elif a_type == '2':
+                a_type == 'installment value'
+                break
+            else:
+                print('Invalid system')
+                a_type = input('Enter 1 to term reduction or 2 to installment value: ')
+        
+        self.db.extraordinary_amortization(name=name, a_type=a_type)
 
     def refresh(self) -> None:
-        pass
+        self.db.refresh()
 
 
-class Table:
+class Table:#TEM TODOS OS EMPRESTIMOS SE PESQUISA PELA CHAVE NOME PARA ACHAR UM LOAN
     def __init__(self):
         self.table = {}
     
@@ -53,9 +66,16 @@ class Table:
     
     def ordinary_payment(self, name) -> None:
         self.table[name].ordinary_payment()
+    
+    def extraordinary_amortization(self, name, a_type) -> None:
+        self.table[name].extraordinary_amortization(a_type)
+    
+    def refresh(self) -> None:
+        for loan in self.table.values():
+            loan.refresh()
 
 
-class Loan:
+class Loan:#UM EMPRESTIMO, SE PESQUISA PELA CHAVE MES PARA ACHAR UM PAYMENT
     def __init__(self, amount, term, interest, system):
         self.amount = amount
         self.term = term
@@ -66,8 +86,8 @@ class Loan:
         for i in range(1, term+1):
             self.payment_list[i] = Payment(
                 mouth=i, 
-                value_of_installment=10, 
-                interest=10,
+                value_of_installment=amount/term, 
+                interest=self.interest,
                 amortized_payment=10,
                 saldo_devedor=10,
                 status='PENDING'
@@ -87,9 +107,24 @@ class Loan:
             if self.payment_list[mouth].status == 'PENDING':
                 self.payment_list[mouth].pay()
                 break
+    
+    def extraordinary_amortization(self, a_type):#ESTA IGUAL AO PAGAMENTO NORMAL
+        if a_type == 'term reduction':
+            for mouth in range(1, self.term+1):
+                if self.payment_list[mouth].status == 'PENDING':
+                    self.payment_list[mouth].pay()
+                    break
+        elif a_type == 'installment value':
+            for mouth in range(1, self.term+1):
+                if self.payment_list[mouth].status == 'PENDING':
+                    self.payment_list[mouth].pay()
+                    break
+    
+    def refresh(self):
+        pass
 
 
-class Payment:
+class Payment:#PAGAMENTO DE UM MES, UMA LINHA POR MES
     def __init__(self, mouth, value_of_installment=10, interest=10, amortized_payment=10, saldo_devedor=10, status='PENDING'):
         self.mouth = mouth# 1 mes do emprestimo
         self.value_of_installment = value_of_installment# valor da prestação
@@ -97,6 +132,7 @@ class Payment:
         self.amortized_payment = amortized_payment#valor amortizado naquele mes
         self.saldo_devedor = saldo_devedor#saldo devedor atualizado
         self.status = status#status da prestação
+    
     def show(self):
         print(f'''
         Mouth: {self.mouth}
@@ -105,6 +141,7 @@ class Payment:
         Amortized payment: {self.amortized_payment}
         Saldo devedor: {self.saldo_devedor}
         Status: {self.status}''')
+    
     def pay(self):
         self.status = 'PAID'
 

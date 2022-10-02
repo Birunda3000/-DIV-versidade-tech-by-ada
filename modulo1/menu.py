@@ -1,3 +1,5 @@
+import sys
+
 class Menu:
     def run(self, storage) -> None:
         """List menu options and execute selected option"""
@@ -17,8 +19,13 @@ class Menu:
     ==================\n
             '''
             )
-            
-            option = int(input('Enter option: '))
+            try:
+                sys.stdout.flush()
+                option = int(input('Enter option: '))
+            except:
+                print('Invalid option')
+                continue
+
             print()
             if option == 1:
                 print('*Register loan*')
@@ -37,6 +44,8 @@ class Menu:
                 _exit_ = True
             else:
                 print('Invalid option')
+            
+            storage.refresh()
             print(
             '''
 ==========================================================
