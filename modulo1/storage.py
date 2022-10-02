@@ -89,7 +89,7 @@ class Loan:#UM EMPRESTIMO, SE PESQUISA PELA CHAVE MES PARA ACHAR UM PAYMENT
                 value_of_installment=amount/term, 
                 interest=self.interest,
                 amortized_payment=10,
-                saldo_devedor=10,
+                debit=10,
                 status='PENDING'
         )
 
@@ -125,12 +125,12 @@ class Loan:#UM EMPRESTIMO, SE PESQUISA PELA CHAVE MES PARA ACHAR UM PAYMENT
 
 
 class Payment:#PAGAMENTO DE UM MES, UMA LINHA POR MES
-    def __init__(self, mouth, value_of_installment=10, interest=10, amortized_payment=10, saldo_devedor=10, status='PENDING'):
+    def __init__(self, mouth, value_of_installment=10, interest=10, amortized_payment=10, debit=10, status='PENDING'):
         self.mouth = mouth# 1 mes do emprestimo
         self.value_of_installment = value_of_installment# valor da prestação
         self.interest = interest# valor pago em juros naquele mes
         self.amortized_payment = amortized_payment#valor amortizado naquele mes
-        self.saldo_devedor = saldo_devedor#saldo devedor atualizado
+        self.debit = debit# atualizado
         self.status = status#status da prestação
     
     def show(self):
@@ -139,7 +139,7 @@ class Payment:#PAGAMENTO DE UM MES, UMA LINHA POR MES
         Value of installment: {self.value_of_installment}
         Interest: {self.interest}
         Amortized payment: {self.amortized_payment}
-        Saldo devedor: {self.saldo_devedor}
+        Debit: {self.debit}
         Status: {self.status}''')
     
     def pay(self):
